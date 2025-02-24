@@ -27,14 +27,16 @@ const authenticateToken = (req, res, next) => {
                 })
 
                 req.user = user
+                console.log("나 미들웨어 리프레시 토큰 유효")
                 next()
             }
             )  
             return ;
         } 
         req.user = user   
+        console.log("나 미들웨어 액세스 토큰 유효")
         next();
     })
 }
 
-module.export = {authenticateToken};
+module.exports = {authenticateToken};

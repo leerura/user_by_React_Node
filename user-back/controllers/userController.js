@@ -48,7 +48,7 @@ const loginUser = async (req, res) => {
         const accessToken = jwt.sign(
             {id: user.id, username: user.username}, //토큰에 담을 정보
             process.env.JWT_SECRET,
-            { expiresIn: '5s'}
+            { expiresIn: '10m'}
         )
 
         const refreshToken = jwt.sign(
@@ -75,7 +75,6 @@ const loginUser = async (req, res) => {
 };
 
 const authenticateToken = (req, res) => {
-    console.log("안뇽")
     const token = req.cookies.accessToken;
     if (!token) return res.status(401).json({message:"토큰없음"});
 
@@ -108,4 +107,16 @@ const authenticateToken = (req, res) => {
     })
 }
 
-module.exports = { registerUser, loginUser, authenticateToken };
+const getUsers = (req, res) => {
+    const sql = "select * from users"
+    db.query(sql, async (err, result) => {
+        if (err) {
+            console.log(err)
+        }
+        const usernames = result.map(user => user.username)
+    
+        return res.status(200).json({users: usernames})
+    })
+}
+
+module.exports = { registerUser, loginUser, authenticateToken, getUsers };
